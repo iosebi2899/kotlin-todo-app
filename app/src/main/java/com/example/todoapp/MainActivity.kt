@@ -70,18 +70,24 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
         database.reference.get().addOnSuccessListener { dataSnapshot ->
             var taskList = dataSnapshot.children.iterator()
             for (task in taskList){
+
                 var subTaskList = task.children.iterator()
                 for(subTask in subTaskList){
+
                     var taskToAdd = ToDoModel()
                     taskToAdd.task = subTask.child("task").value.toString()
-                    taskToAdd.status = subTask.child("status").value.toString().toInt()
-                    taskToAdd.id = subTask.child("id").value.toString().toInt()
+//                    taskToAdd.status = subTask.child("status").value.toString().toInt()
+//                    taskToAdd.id = subTask.child("id").value.toString().toInt()
 
                     allTaskData.add(taskToAdd)
                 }
             }
+
+
+            tasksAdapter.setTasks(allTaskData)
+
+            tasksAdapter.notifyDataSetChanged()
+
         }
-        tasksAdapter.setTasks(allTaskData)
-        tasksAdapter.notifyDataSetChanged()
     }
 }

@@ -17,7 +17,7 @@ import com.google.firebase.ktx.Firebase
 
 class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
 
-    private lateinit var  todoList: ArrayList<ToDoModel>
+    private var todoList: ArrayList<ToDoModel> = arrayListOf()
     private lateinit var database: FirebaseDatabase
     private lateinit var activity: MainActivity
 
