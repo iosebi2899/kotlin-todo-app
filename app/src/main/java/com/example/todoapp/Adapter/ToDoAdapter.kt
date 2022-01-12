@@ -1,6 +1,7 @@
 package com.example.todoapp.Adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,9 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
 
     }
 
+    fun getItem(position: Int): ToDoModel {
+        return todoList[position]
+    }
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.todo, viewGroup, false)
@@ -41,9 +45,9 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
         viewHolder.task.isChecked = toBool(item.status)
         viewHolder.task.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                database.reference.child(item.id.toString()).child("status").setValue(true)
+                database.reference.child("tasks").child(item.id.toString()).child("status").setValue(1)
             }else{
-                database.reference.child(item.id.toString()).child("status").setValue(false)
+                database.reference.child("tasks").child(item.id.toString()).child("status").setValue(0)
             }
         }
     }
@@ -52,6 +56,13 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
     fun setTasks(todoList: ArrayList<ToDoModel>){
         this.todoList = todoList
         notifyDataSetChanged()
+    }
+
+    fun deleteItem(position: Int){
+        var item = todoList[position]
+        database.reference.child("tasks").child(item.id.toString()).removeValue()
+        todoList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     fun editItem(position: Int){
@@ -63,8 +74,6 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
         val fragment = AddNewTask()
         fragment.arguments = bundle
         fragment.show(activity.supportFragmentManager, AddNewTask().TAG)
-
-
     }
 
 

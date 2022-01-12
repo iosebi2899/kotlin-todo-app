@@ -88,7 +88,7 @@ class AddNewTask: BottomSheetDialogFragment() {
 
 
             if(isUpdate){
-                database.reference.child(id).child("task").setValue(text)
+                database.reference.child("tasks").child(id).child("task").setValue(text)
             }else{
                 val id = Random.nextInt(0, 99999)
                 val task = ToDoModel()
