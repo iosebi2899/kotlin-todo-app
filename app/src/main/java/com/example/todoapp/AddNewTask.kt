@@ -1,5 +1,6 @@
 package com.example.todoapp
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.provider.Settings
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
@@ -21,13 +23,17 @@ class AddNewTask: BottomSheetDialogFragment() {
     lateinit var newTaskText: EditText
     lateinit var newTaskSave: Button
     lateinit var id: Number
+    lateinit var deviceId: String
 
     var database = Firebase.database("https://todoapp-a4f6f-default-rtdb.europe-west1.firebasedatabase.app/")
     val TAG = "ActionBottomDialog"
 
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.DialogStyle)
+
+        deviceId = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
         override fun onCreateView(
@@ -43,6 +49,7 @@ class AddNewTask: BottomSheetDialogFragment() {
     }
 
 
+    @SuppressLint("HardwareIds")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,19 +90,18 @@ class AddNewTask: BottomSheetDialogFragment() {
         })
         newTaskSave.setOnClickListener{
 
-            var id = bundle?.getInt("id").toString()
+            val id = bundle?.getInt("id").toString()
             val text = newTaskText.text.toString()
 
-
             if(isUpdate){
-                database.reference.child("tasks").child(id).child("task").setValue(text)
+                database.reference.child(deviceId).child(id).child("task").setValue(text)
             }else{
                 val id = Random.nextInt(0, 99999)
                 val task = ToDoModel()
                 task.task = text
                 task.status = 0
                 task.id = id
-                database.reference.child("tasks").child(id.toString()).setValue(task)
+                database.reference.child(deviceId).child(id.toString()).setValue(task)
             }
 
             dismiss()

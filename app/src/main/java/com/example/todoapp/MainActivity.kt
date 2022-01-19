@@ -1,6 +1,7 @@
 package com.example.todoapp
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.Color
@@ -11,7 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
+import android.provider.Settings
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
     private lateinit var fab: FloatingActionButton
     private lateinit var icon: Drawable
     private lateinit var background: ColorDrawable
+    private lateinit var deviceId: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,8 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
         listeners()
     }
 
+
+    @SuppressLint("HardwareIds")
     private fun init(){
 
         database = Firebase.database("https://todoapp-a4f6f-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
         taskList = ArrayList()
 
         tasksAdapter = ToDoAdapter()
+        deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
 
         recyclerView = findViewById(R.id.tasksRecycle)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -118,7 +123,7 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
                         icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                         background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt() + backgroundColorOffset, itemView.bottom)
                     }else if(dX<0){
-                        var iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
+                        val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
                         var iconRight = itemView.right - iconMargin
                         icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                         background.setBounds(itemView.right + dX.toInt() - backgroundColorOffset, itemView.top, itemView.right , itemView.bottom)
@@ -151,17 +156,20 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
 
     @SuppressLint("NotifyDataSetChanged")
     fun getAllTask() {
-        var allTaskData: ArrayList<ToDoModel> = ArrayList()
+        val allTaskData: ArrayList<ToDoModel> = ArrayList()
         database.reference.get().addOnSuccessListener { dataSnapshot ->
-            var taskList = dataSnapshot.children.iterator()
+            val taskList = dataSnapshot.children.iterator()
             for (task in taskList){
-                var subTaskList = task.children.iterator()
-                for(subTask in subTaskList){
-                    var taskToAdd = ToDoModel()
-                    taskToAdd.task = subTask.child("task").value.toString()
-                    taskToAdd.status = subTask.child("status").value.toString().toInt()
-                    taskToAdd.id = subTask.child("id").value.toString().toInt()
-                    allTaskData.add(taskToAdd)
+                if(task.key == deviceId){
+                    val subTaskList = task.children.iterator()
+                    for(subTask in subTaskList){
+                        val taskToAdd = ToDoModel()
+                        taskToAdd.task = subTask.child("task").value.toString()
+                        taskToAdd.status = subTask.child("status").value.toString().toInt()
+                        taskToAdd.id = subTask.child("id").value.toString().toInt()
+                        taskToAdd.deviceId = deviceId
+                        allTaskData.add(taskToAdd)
+                    }
                 }
             }
 
