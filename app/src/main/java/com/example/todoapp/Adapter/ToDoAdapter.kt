@@ -1,8 +1,8 @@
 package com.example.todoapp.Adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,18 +17,20 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
-
     private var todoList: ArrayList<ToDoModel> = arrayListOf()
     private lateinit var database: FirebaseDatabase
     private lateinit var activity: MainActivity
 
+
+
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         var task: CheckBox = view.findViewById(R.id.todoCheckBox)
-
     }
 
+
     fun getItem(position: Int): ToDoModel {
+
         return todoList[position]
     }
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +40,7 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
         return ViewHolder(view)
     }
 
+    @SuppressLint("HardwareIds")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         database = Firebase.database("https://todoapp-a4f6f-default-rtdb.europe-west1.firebasedatabase.app/")
         val item = todoList[position]
@@ -45,9 +48,9 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
         viewHolder.task.isChecked = toBool(item.status)
         viewHolder.task.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                database.reference.child("tasks").child(item.id.toString()).child("status").setValue(1)
+                database.reference.child(item.deviceId).child(item.id.toString()).child("status").setValue(1)
             }else{
-                database.reference.child("tasks").child(item.id.toString()).child("status").setValue(0)
+                database.reference.child(item.deviceId).child(item.id.toString()).child("status").setValue(0)
             }
         }
     }
@@ -60,7 +63,7 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {
 
     fun deleteItem(position: Int){
         var item = todoList[position]
-        database.reference.child("tasks").child(item.id.toString()).removeValue()
+        database.reference.child(item.deviceId).child(item.id.toString()).removeValue()
         todoList.removeAt(position)
         notifyItemRemoved(position)
     }

@@ -8,8 +8,15 @@
         <entry key="app/src/main/res/drawable/add_vector.xml" value="0.3841025641025641" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.3814814814814815" />
         <entry key="app/src/main/res/drawable/round_outline.xml" value="0.2328125" />
+        <entry key="app/src/main/res/layout/activity_logged_in.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1887031408308004" />
+        <entry key="app/src/main/res/layout/app_bar_logged_in.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/content_logged_in.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/fragment_slideshow.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/new_task.xml" value="0.1887031408308004" />
         <entry key="app/src/main/res/layout/new_todo.xml" value="0.1887031408308004" />
         <entry key="app/src/main/res/layout/todo.xml" value="0.21739130434782608" />

@@ -14,23 +14,27 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/header"
+        android:weightSum="10"
         >
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans"
             android:gravity="center"
-            android:text="Tasks"
+            android:text="@string/tasks"
             android:textColor="@color/white"
             android:textSize="38sp" />
-        </LinearLayout>
+
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tasksRecycle"
         android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:layout_below="@id/header"
         android:nestedScrollingEnabled="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -43,6 +47,7 @@
         android:layout_alignParentBottom="true"
         android:backgroundTint="@color/fabColor"
         android:src="@drawable/add_vector_accent"
-        app:borderWidth="0sp" />
+        app:borderWidth="0sp"
+        android:contentDescription="@string/adding_task" />
 
 </RelativeLayout>
